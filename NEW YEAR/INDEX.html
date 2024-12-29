@@ -42,55 +42,55 @@
     </style>
 </head>
 <body>
-    <!-- 木鱼图片 -->
+   
     <img src="custom_image.jpg" id="woodFish" alt="吉鸿(图片搞不懂为什么不显示了）">
     <h1 id="meritCount">吉鸿幸福值+0</h1>
     <p>点击吉鸿以送出祝福</p>
 
-    <!-- 木鱼声音文件 -->
+    
     <audio id="woodSound" src="wood_block.mp3"></audio>
 
-    <!-- 背景音乐 -->
+    
     <audio id="backgroundMusic" src="say_goodbye_to_happiness.mp3" loop></audio>
 
-    <!-- 背景音乐控制 -->
+    
     <div class="audio-controller">
         <button id="playMusic">播放背景音乐</button>
         <button id="pauseMusic">暂停背景音乐</button>
     </div>
 
     <script>
-        let count = 0; // 功德计数
+        let count = 0;
 
-        // 点击木鱼时增加功德并播放木鱼声音
+       
         document.getElementById('woodFish').addEventListener('click', function () {
-            count++; // 增加功德计数
-            document.getElementById('meritCount').innerText = `吉鸿幸福值 +${count}`; // 更新功德显示
+            count++; 
+            document.getElementById('meritCount').innerText = `吉鸿幸福值 +${count}`;
 
-            // 播放木鱼声音
+           
             const woodSound = document.getElementById('woodSound');
-            woodSound.currentTime = 0; // 重置播放进度
-            woodSound.play(); // 播放声音
+            woodSound.currentTime = 0; 
+            woodSound.play(); 
         });
 
-        // 背景音乐控制
+        
         const bgMusic = document.getElementById('backgroundMusic');
         const playButton = document.getElementById('playMusic');
         const pauseButton = document.getElementById('pauseMusic');
 
-        // 自动尝试播放背景音乐
+        
         window.onload = () => {
             bgMusic.play().catch(() => {
                 console.log("背景音乐自动播放被阻止，需要用户手动点击播放按钮");
             });
         };
 
-        // 点击按钮播放背景音乐
+        
         playButton.addEventListener('click', () => {
             bgMusic.play();
         });
 
-        // 点击按钮暂停背景音乐
+        
         pauseButton.addEventListener('click', () => {
             bgMusic.pause();
         });
