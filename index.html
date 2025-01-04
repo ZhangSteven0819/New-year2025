@@ -3,97 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>吉鸿幸福小屋</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        img {
-            width: 200px;
-            height: 200px;
-            margin-top: 50px;
-            cursor: pointer;
-        }
-        h1 {
-            font-size: 24px;
-            margin-top: 20px;
-            color: #333;
-        }
-        p {
-            font-size: 18px;
-            color: #555;
-        }
-        .audio-controller {
-            margin-top: 20px;
-        }
-        .audio-controller button {
-            font-size: 16px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+    <title>2025 新年快乐</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 木鱼图片 -->
-    <img src="custom_image.jpg" id="woodFish" alt="吉鸿(图片搞不懂为什么不显示了）">
-    <h1 id="meritCount">吉鸿幸福值+0</h1>
-    <p>点击吉鸿以送出祝福</p>
-
-    <!-- 木鱼声音文件 -->
-    <audio id="woodSound" src="wood_block.mp3"></audio>
-
-    <!-- 背景音乐 -->
-    <audio id="backgroundMusic" src="say_goodbye_to_happiness.mp3" loop></audio>
-
-    <!-- 背景音乐控制 -->
-    <div class="audio-controller">
-        <button id="playMusic">播放《说好的幸福呢》</button>
-        <button id="pauseMusic">暂停《说好的幸福呢》</button>
+    <div class="container">
+        <h1>2025 新年快乐！🎉</h1>
+        <p>祝大家新年快乐，万事如意！</p>
+        <div class="photo-gallery">
+            <!-- 图片将放置在这里 -->
+        </div>
+        <button id="playButton">播放音乐</button>
+        <audio id="bgMusic" src="hongsegaogenxie.mp3" loop></audio>
     </div>
-
-    <script>
-        let count = 0; // 功德计数
-
-        // 点击木鱼时增加功德并播放木鱼声音
-        document.getElementById('woodFish').addEventListener('click', function () {
-            count++; // 增加功德计数
-            document.getElementById('meritCount').innerText = `吉鸿幸福值 +${count}`; // 更新功德显示
-
-            // 播放木鱼声音
-            const woodSound = document.getElementById('woodSound');
-            woodSound.currentTime = 0; // 重置播放进度
-            woodSound.play(); // 播放声音
-        });
-
-        // 背景音乐控制
-        const bgMusic = document.getElementById('backgroundMusic');
-        const playButton = document.getElementById('playMusic');
-        const pauseButton = document.getElementById('pauseMusic');
-
-        // 自动尝试播放背景音乐
-        window.onload = () => {
-            bgMusic.play().catch(() => {
-                console.log("背景音乐自动播放被阻止，需要用户手动点击播放按钮");
-            });
-        };
-
-        // 点击按钮播放背景音乐
-        playButton.addEventListener('click', () => {
-            bgMusic.play();
-        });
-
-        // 点击按钮暂停背景音乐
-        pauseButton.addEventListener('click', () => {
-            bgMusic.pause();
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
