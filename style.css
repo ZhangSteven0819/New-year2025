@@ -1,0 +1,423 @@
+/* 全局样式 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    scroll-behavior: smooth;
+    text-align: center;
+    background-color: #000; /* 苹果黑色背景 */
+    color: #fff; /* 白色文字 */
+}
+
+/* 毛玻璃导航栏 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8); /* 黑色毛玻璃 */
+    backdrop-filter: blur(6px); /* 更细腻的毛玻璃效果 */
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2); /* 加粗白线分割 */
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo img {
+    width: 38px;
+    height: 36px; /* 缩小 Logo */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px; /* 调整间距 */
+    margin: 0;
+    padding: 0;
+    align-items: center; /* 确保按钮垂直居中 */
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #fff; /* 白色文字 */
+    font-weight: 500;
+    font-size: 0.875rem; /* 统一字体大小 */
+    padding: 0.5rem 1rem; /* 统一内边距 */
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #007aff; /* 悬停时变为蓝色 */
+}
+
+/* 购买按钮 */
+.buy-button {
+    background-color: #007aff; /* 蓝色背景 */
+    color: #fff;
+    border-radius: 25px; /* 圆角 */
+    text-decoration: none;
+    font-size: 0.875rem; /* 统一字体大小 */
+    padding: 0.5rem 1rem; /* 统一内边距 */
+    transition: background-color 0.3s ease;
+}
+
+.buy-button:hover {
+    background-color: #005bb5; /* 悬停时变深蓝色 */
+}
+
+/* 英雄部分 */
+.hero-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    color: #fff; /* 白色文字 */
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    animation: fadeInUp 1.5s ease-out;
+    z-index: 2;
+    text-align: left;
+    max-width: 50%;
+}
+
+.hero-content h1 {
+    font-size: 4.5rem; /* 增大字体 */
+    font-weight: 700; /* 字体加粗 */
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: 1.75rem; /* 增大字体 */
+    margin-bottom: 2rem;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px; /* 缩小间距 */
+}
+
+.scroll-down, .buy-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem; /* 按钮大小 */
+    background-color: #007aff; /* 蓝色按钮 */
+    color: #fff;
+    border-radius: 25px; /* 圆角 */
+    text-decoration: none;
+    font-size: 1rem; /* 字体大小 */
+    transition: background-color 0.3s ease;
+}
+
+.scroll-down:hover, .buy-button:hover {
+    background-color: #005bb5; /* 悬停时变深蓝色 */
+}
+
+.hero-image {
+    width: 35%; /* 图片宽度 */
+    max-width: 400px;
+    border-radius: 20px; /* 苹果风格圆角 */
+    animation: float 3s ease-in-out infinite;
+}
+
+/* 内容部分 */
+section {
+    padding: 6rem 5%; /* 缩小间距 */
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 关于我 */
+.about-section {
+    display: flex;
+    align-items: center;
+    gap: 40px; /* 图片和文字之间的间距 */
+}
+
+.about-section .section-image {
+    width: 35%; /* 图片比第一模块小 */
+    max-width: 400px;
+    border-radius: 20px; /* 苹果风格圆角 */
+    animation: float 3s ease-in-out infinite;
+}
+
+.about-section .content {
+    flex: 1;
+    text-align: left;
+}
+
+.about-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+.about-section p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+/* 专家评价 */
+.expert-review-section {
+    padding: 6rem 5%;
+    background-color: rgba(255, 255, 255, 0.1); /* 浅色背景 */
+    border-top: 2px solid rgba(255, 255, 255, 0.2); /* 加粗白线分割 */
+}
+
+.expert-review-section .content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.expert-review-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.expert-review-section .expert-review {
+    font-style: italic;
+    color: #ccc;
+    font-size: 1.25rem;
+    line-height: 1.6;
+}
+
+/* 技术规格 */
+.portfolio-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.specs-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.specs-block {
+    flex: 1;
+    text-align: center; /* 优点和缺点居中 */
+}
+
+
+.specs-block h3 {
+    font-size: 1.5rem; /* 缩小字体 */
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.specs-category ul {
+    list-style-type: disc;
+    margin-left: 0; /* 移除默认的左边距 */
+    padding-left: 1.5rem; /* 使用 padding 来控制点的位置 */
+}
+
+.specs-category ul li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ccc;
+    text-align: left; /* 确保文字左对齐 */
+}
+
+.specs-details {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.specs-details h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    text-align: center; /* 技术规格标题居中 */
+}
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 两列布局 */
+    gap: 20px; /* 间距 */
+}
+
+.specs-category {
+    margin-bottom: 2rem;
+}
+
+.specs-category h3 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.specs-category {
+    margin-bottom: 2rem;
+    text-align: center;
+    padding-bottom: 2rem; /* 增加底部内边距 */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* 添加分隔线 */
+}
+
+.specs-category ul {
+    list-style-type: disc;
+    margin-left: 0; /* 移除默认的左边距 */
+    padding-left: 1.5rem; /* 使用 padding 来控制点的位置 */
+}
+
+.specs-category ul li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ccc;
+    text-align: left; /* 确保文字左对齐 */
+}
+
+/* 联系我们 */
+.contact-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px; /* 左右内容之间的间距 */
+}
+
+.contact-section .content {
+    flex: 1;
+    text-align: left;
+}
+
+.contact-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+.contact-section p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+.contact-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.contact-section ul li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 0.5rem;
+}
+
+.info-blocks {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 模块之间的间距 */
+}
+
+.info-block {
+    text-align: left;
+}
+
+.info-block h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.info-block p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 0.5rem;
+}
+
+.info-link {
+    color: #007aff; /* 蓝色链接 */
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.info-link:hover {
+    color: #005bb5; /* 悬停时变深蓝色 */
+}
+
+/* 底部内容 */
+.footer-section {
+    padding: 1.5rem 5%; /* 缩小间距 */
+    background-color: rgba(0, 0, 0, 0.8); /* 黑色背景 */
+    border-top: 2px solid rgba(255, 255, 255, 0.2); /* 加粗白线分割 */
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-content p {
+    font-size: 0.75rem; /* 缩小字体 */
+    color: #ccc; /* 浅灰色文字 */
+}
+
+.footer-content a {
+    color: #007aff; /* 蓝色链接 */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-content a:hover {
+    color: #005bb5; /* 悬停时变深蓝色 */
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 滚动动画 */
+[data-animate] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+[data-animate].animate {
+    opacity: 1;
+    transform: translateY(0);
+}
