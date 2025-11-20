@@ -1,264 +1,392 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple(中国大陆)</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="images/apple-logo.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRI - Global Assessment Protocol</title>
+<style>
+    /* --- 1. 视觉系统 (System Core) --- */
+    :root {
+        --bg-color: #f2f4f6;
+        --card-bg: rgba(255, 255, 255, 0.85);
+        --text-main: #1d1d1f;
+        --text-sec: #86868b;
+        --accent: #0071e3;
+        --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.08);
+        --ease-spring: cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    body {
+        margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+        background-color: var(--bg-color); height: 100vh;
+        display: flex; justify-content: center; align-items: center;
+        overflow: hidden; color: var(--text-main);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- 2. 极光背景 (Aurora) --- */
+    .aurora-bg {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1; overflow: hidden; background: #f5f5f7;
+    }
+    .blob { position: absolute; filter: blur(80px); opacity: 0.6; animation: float 20s infinite alternate ease-in-out; }
+    .blob-1 { width: 600px; height: 600px; background: #dbeafe; top: -10%; left: -10%; }
+    .blob-2 { width: 500px; height: 500px; background: #e0e7ff; bottom: -10%; right: -10%; animation-delay: -5s; }
+    @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(40px, 60px); } }
+
+    /* --- 3. 主卡片 (Main Interface) --- */
+    .card {
+        width: 90%; max-width: 440px; height: auto; min-height: 720px;
+        background: var(--card-bg);
+        backdrop-filter: blur(50px) saturate(180%); -webkit-backdrop-filter: blur(50px) saturate(180%);
+        border-radius: 32px; box-shadow: var(--shadow-soft);
+        padding: 40px 36px; position: relative;
+        display: flex; flex-direction: column;
+        transition: all 0.5s var(--ease-spring);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-sizing: border-box;
+    }
+
+    /* --- 4. 通用组件 --- */
+    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 11px; font-weight: 700; color: #b0b0b5; letter-spacing: 0.5px; }
+    .status-badge { display: flex; align-items: center; gap: 6px; color: #6e6e73; }
+    .dot { width: 6px; height: 6px; background-color: #34c759; border-radius: 50%; box-shadow: 0 0 8px #34c759; animation: pulse 3s infinite; }
+    @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+    h1 { font-size: 32px; font-weight: 800; margin: 10px 0 15px 0; line-height: 1.1; letter-spacing: -0.5px; }
+    p { font-size: 15px; line-height: 1.6; color: var(--text-sec); margin-bottom: 20px; }
+    .tag-pill { display: inline-block; background: #e8e8ed; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; color: #6e6e73; margin-bottom: 10px; }
+
+    .btn-primary {
+        background-color: #1d1d1f; color: #fff; width: 100%; padding: 18px;
+        border-radius: 99px; border: none; font-size: 16px; font-weight: 600;
+        cursor: pointer; transition: all 0.3s var(--ease-spring);
+    }
+    .btn-primary:hover { transform: scale(1.02); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .btn-primary:active { transform: scale(0.96); }
+
+    /* --- 5. 法律页脚 (Legal Footer) --- */
+    .legal-footer {
+        margin-top: auto;
+        padding-top: 20px;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        text-align: center;
+        font-size: 11px;
+        color: #999;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .legal-links { display: flex; justify-content: center; gap: 15px; }
+    .legal-link { cursor: pointer; color: var(--text-sec); text-decoration: none; transition: color 0.2s; }
+    .legal-link:hover { color: var(--text-main); text-decoration: underline; }
+
+    /* --- 6. 法律模态框 (Legal Modal) --- */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        z-index: 999; display: none; justify-content: center; align-items: center;
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.show { display: flex; opacity: 1; }
+
+    .modal-content {
+        width: 85%; max-width: 500px; max-height: 80vh;
+        background: #fff; border-radius: 24px; padding: 30px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        display: flex; flex-direction: column;
+        transform: translateY(20px); transition: transform 0.3s var(--ease-spring);
+    }
+    .modal-overlay.show .modal-content { transform: translateY(0); }
+
+    .modal-body { overflow-y: auto; margin: 20px 0; font-size: 13px; line-height: 1.6; color: #444; padding-right: 10px; }
+    .modal-body h3 { margin-top: 0; font-size: 16px; color: #000; }
+    .modal-body p { margin-bottom: 15px; font-size: 13px; color: #555; }
+
+    .btn-close {
+        background: #f2f2f7; color: #000; padding: 12px; border-radius: 12px;
+        border: none; font-weight: 600; cursor: pointer; width: 100%;
+    }
+    .btn-close:hover { background: #e5e5ea; }
+
+    /* --- 7. 其他样式 (Chart, Lang, etc) --- */
+    .lang-btn { cursor: pointer; font-size: 12px; padding: 6px 10px; border-radius: 8px; display: flex; gap: 5px; }
+    .lang-btn:hover { background: rgba(0,0,0,0.05); }
+    .lang-menu { position: absolute; top: 55px; right: 30px; background: rgba(255,255,255,0.95); padding: 8px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; flex-direction: column; z-index: 100; }
+    .lang-menu.show { display: flex; }
+    .lang-item { padding: 8px 12px; font-size: 13px; border-radius: 8px; cursor: pointer; }
+    .lang-item:hover { background: #f2f2f7; }
+
+    .screen { display: none; flex-direction: column; height: 100%; }
+    .screen.active { display: flex; animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .option-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); padding: 16px; border-radius: 14px; margin-bottom: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; opacity: 0; animation: slideUp 0.4s forwards; }
+    @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+    .option-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+    .chart-box { position: relative; width: 200px; height: 200px; margin: 20px auto; display: flex; justify-content: center; align-items: center; }
+    .circular-chart { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .circle-bg { fill: none; stroke: #e5e5ea; stroke-width: 8; }
+    .circle-path { fill: none; stroke: var(--accent); stroke-width: 8; stroke-dasharray: 565; stroke-dashoffset: 565; transition: stroke-dashoffset 1.5s ease-out; stroke-linecap: round; }
+    .percentage { font-size: 48px; font-weight: 800; color: var(--accent); }
+
+    .data-panel { background: rgba(255,255,255,0.5); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 15px; margin-bottom: 20px; }
+    .data-stat { font-size: 24px; font-weight: 700; }
+
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="logo">
-                <img src="images/apple-logo2.png" alt="apple logo" class="hero-image">
-            </div>
-            <ul class="nav-links">
-                <li><a href="#about">概览</a></li>
-                <li><a href="#portfolio">规格</a></li>
-                <li><a href="#contact" class="buy-button">购买</a></li>
-            </ul>
-        </div>
-    </nav>
-    <header class="hero-section">
-        <div class="hero-content">
-            <h1>黄吉鸿Pro</h1>
-            <p>世界上最懂你的男人</p>
-            <div class="hero-buttons">
-                <a href="#contact" class="buy-button">购买</a>
-                <a href="#about" class="scroll-down">了解更多</a>
-            </div>
-        </div>
-        <img src="images/hero-image.png" alt="个人主页封面" class="hero-image">
-    </header>
-    <section id="about" class="about-section">
-        <img src="images/about-image.jpg" alt="关于我" class="section-image">
-        <div class="content">
-            <h2>概览</h2>
-            <p>仿生人黄吉鸿Pro 是一款专为现代生活设计的智能仿生人，集成了先进的情感识别和社交互动技术。</p>
-            <p>无论是日常生活还是工作场景，黄吉鸿Pro 都能为您提供贴心的陪伴和支持。</p>
-            <p>他性格温和，行为可靠，是您生活中值得信赖的伙伴。</p>
-        </div>
-    </section>
-    <section class="expert-review-section">
-        <div class="content">
-            <h2>苹果CEO库克:</h2>
-            <p class="expert-review">“黄吉鸿Pro 是一款极具潜力的仿生人产品，尤其在情感互动和社交支持方面表现出色。”</p>
-        </div>
-    </section>
-    <section id="portfolio" class="portfolio-section">
-        <div class="specs-container">
-            <div class="specs-block">
-                <h3>优点</h3>
-                <ul>
-                    <li>老实巴交：性格温和，行为可靠。</li>
-                    <li>乐于助人：随时为您提供帮助。</li>
-                    <li>善于分享：擅长与他人分享知识和经验。</li>
-                    <li>诚实可靠：始终保持真诚，绝不隐瞒或欺骗。</li>
-                </ul>
-            </div>
-            <div class="specs-block">
-                <h3>缺点</h3>
-                <ul>
-                    <li>缺乏独立思想：依赖预设程序运行。</li>
-                    <li>学习能力有限：在复杂任务上表现一般。</li>
-                    <li>恋爱倾向：对情感互动有较强需求。</li>
-                    <li>好战倾向：在特定情境下可能表现出攻击性。</li>
-                </ul>
-            </div>
-        </div>
-        <div class="specs-details">
-            <h2>技术规格</h2>
-            <div class="specs-grid">
-                <div class="specs-category">
-                    <h3>材质和外观</h3>
-                    <ul>
-                        <li>外壳材质：100% 再生铝金属，高强度纳米复合材料。</li>
-                        <li>表面处理：磨砂质感，防指纹。</li>
-                        <li>颜色：经典银、深邃黑、玫瑰金。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>尺寸和重量</h3>
-                    <ul>
-                        <li>高度：180 cm</li>
-                        <li>宽度：45 cm</li>
-                        <li>厚度：25 cm</li>
-                        <li>重量：75 kg</li>
-                        <li>长度：18cm</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>硬件和按钮</h3>
-                    <ul>
-                        <li>电源按钮：集成指纹识别，支持快速唤醒。</li>
-                        <li>音量控制：触控式滑动调节。</li>
-                        <li>多功能按钮：可自定义功能，支持快捷操作。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>控制</h3>
-                    <ul>
-                        <li>语音控制：支持多语言识别，响应速度 &lt; 0.5 秒。</li>
-                        <li>手势控制：支持 10 种以上手势操作。</li>
-                        <li>远程控制：通过专属 App 实现远程操控。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>芯片和感应器</h3>
-                    <ul>
-                        <li>处理器：仿生芯片 M4 Pro，16 核神经网络引擎。</li>
-                        <li>感应器：高精度陀螺仪、加速度感应器、环境光感应器、红外感应器。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>健康</h3>
-                    <ul>
-                        <li>心率监测：实时监测，精度达 99%。</li>
-                        <li>血氧检测：支持全天候血氧饱和度监测。</li>
-                        <li>体温检测：非接触式体温测量，误差 ±0.1°C。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>显示屏</h3>
-                    <ul>
-                        <li>类型：全息投影显示屏。</li>
-                        <li>尺寸：15.6 英寸（可调节）。</li>
-                        <li>分辨率：3840 x 2160 像素，Retina 级别清晰度。</li>
-                        <li>亮度：最高 1000 尼特，支持 HDR10。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>电源和电池续航</h3>
-                    <ul>
-                        <li>电池类型：高密度锂聚合物电池。</li>
-                        <li>续航时间：日常使用 72 小时，高强度使用 24 小时。</li>
-                        <li>充电方式：无线充电，支持快充（30 分钟充至 50%）。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>操作系统</h3>
-                    <ul>
-                        <li>操作系统：iOS 17（专为仿生人定制）。</li>
-                        <li>更新支持：长期系统更新，至少 5 年。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>体能训练和健身记录</h3>
-                    <ul>
-                        <li>运动模式：支持 20 种以上运动模式。</li>
-                        <li>健身记录：自动记录步数、卡路里消耗、运动时长。</li>
-                        <li>健康建议：基于数据分析提供个性化健身建议。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>安全功能</h3>
-                    <ul>
-                        <li>生物识别：面部识别 + 指纹识别双重认证。</li>
-                        <li>数据加密：军用级 AES-256 加密。</li>
-                        <li>隐私保护：所有数据本地存储，不上传云端。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>耐用性</h3>
-                    <ul>
-                        <li>防水等级：IP68（水下 2 米，30 分钟）。</li>
-                        <li>防尘等级：完全防尘。</li>
-                        <li>抗摔性能：通过 1.5 米跌落测试。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>连接</h3>
-                    <ul>
-                        <li>无线连接：Wi-Fi 6E、蓝牙 5.2、NFC。</li>
-                        <li>有线连接：USB-C 3.1（支持数据传输和充电）、HDMI 2.0。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>辅助功能</h3>
-                    <ul>
-                        <li>语音助手：支持语音播报和语音指令。</li>
-                        <li>视觉辅助：高对比度模式和放大镜功能。</li>
-                        <li>听觉辅助：实时字幕和助听器兼容。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>操作环境</h3>
-                    <ul>
-                        <li>工作温度：0°C 至 40°C。</li>
-                        <li>存储温度：-20°C 至 45°C。</li>
-                        <li>湿度范围：5% 至 95%（非凝结）。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>仿生人黄吉鸿 与环境</h3>
-                    <ul>
-                        <li>30% 的回收或可再生成分</li>
-                        <li>100% 的生产用电来自清洁电力</li>
-                        <li>50% 及以上采用非空运物流运输</li>
-                        <li>碳排放量与我们的基准相比减少了 75%</li>
-                        <li>8.5 千克二氧化碳当量的剩余排放总量由高质量碳信用额抵消</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>兼容性</h3>
-                    <ul>
-                        <li>设备兼容：支持 iOS、Android、Windows 和 macOS。</li>
-                        <li>配件兼容：支持所有标准 USB-C 配件。</li>
-                    </ul>
-                </div>
-                <div class="specs-category">
-                    <h3>包装内容</h3>
-                    <ul>
-                        <li>仿生人黄吉鸿Pro 主机 x 1</li>
-                        <li>USB-C 充电线 x 1</li>
-                        <li>快速入门指南 x 1</li>
-                        <li>保修卡 x 1</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-   <section id="contact" class="contact-section">
-        <div class="content">
-            <h2>联系我们购买</h2>
-            <p>如果您对黄吉鸿Pro 有任何疑问或合作意向，请随时通过以下方式联系我们：</p>
-            <ul>
-                <li>电话：202220834</li>
-                <li>邮箱：431191257@qq.com</li>
-                <li>地址：美国加利福尼亚州库比蒂诺Apple Park</li>
-            </ul>
-        </div>
-        <div class="info-blocks">
-            <div class="info-block">
-                <h3>免费送货</h3>
-                <p>享受送货上门服务，或前往Apple Store 零售店提取现货。</p>
-                <a href="https://www.apple.com.cn/shop/shipping-pickup" target="_blank" class="info-link">进一步了解</a>
-            </div>
-            <div class="info-block">
-                <h3>分期付款</h3>
-                <p>符合条件的用户可选择灵活的分期付款方式。</p>
-                <a href="https://www.apple.com.cn/shop/browse/financing" target="_blank" class="info-link">进一步了解</a>
-            </div>
-            <div class="info-block">
-                <h3>获得购买帮助</h3>
-                <p>有问题吗？致电 Specialist 专家或进行在线交流。</p>
-                <a href="https://www.apple.com.cn/contact/" target="_blank" class="info-link">联系我们 ></a>
-            </div>
-        </div>
-    </section>
-    <footer class="footer-section">
-        <div class="footer-content">
-            <p>Copyright © 2025 Apple Inc. 保留所有权利。
-                <a href="https://www.apple.com.cn/legal/privacy/" target="_blank">隐私政策</a>
-                <a href="https://www.apple.com.cn/legal/terms/site.html" target="_blank">使用条款</a>
-                <a href="https://www.apple.com.cn/shop/browse/open/salespolicies" target="_blank">销售政策</a>
-                <a href="https://www.apple.com.cn/legal/" target="_blank">法律信息</a>
-                <a href="https://www.apple.com.cn/sitemap/" target="_blank">网站地图</a>
-            </p>
-        </div>
-    </footer>
 
-    <script src="script.js"></script>
+<div class="aurora-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+</div>
+
+<div class="modal-overlay" id="legal_modal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <h3 id="legal_title">Terms of Use & Privacy Protocol</h3>
+            <div id="legal_text">
+                </div>
+        </div>
+        <button class="btn-close" onclick="closeLegal()">I Understand / 我已了解</button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="header-bar">
+        <span id="txt_agency">SRI INSTITUTE v4.2</span>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <div class="lang-btn" onclick="toggleLang()">🌐 <span id="cur_lang">English</span></div>
+            <div class="status-badge"><span class="dot"></span> <span id="txt_secure">SECURE</span></div>
+        </div>
+    </div>
+    <div class="lang-menu" id="lang_menu">
+        <div class="lang-item" onclick="setLang('en')">🇺🇸 English</div>
+        <div class="lang-item" onclick="setLang('zh')">🇨🇳 中文</div>
+        <div class="lang-item" onclick="setLang('jp')">🇯🇵 日本語</div>
+    </div>
+
+    <div id="screen-home" class="screen active">
+        <div style="flex:1;">
+            <span class="tag-pill" id="txt_module">PSYCHOMETRIC MODULE</span>
+            <h1 id="txt_title">Sexual Orientation<br>Spectrum Analysis</h1>
+            <p id="txt_intro">Welcome to the SRI (Spectrum Research Institute) subconscious assessment system.</p>
+
+            <div class="data-panel">
+                <h4 style="margin:0 0 5px 0; font-size:11px; color:#888; text-transform:uppercase;">Global Database</h4>
+                <div class="data-stat">4,203,192</div>
+                <div style="font-size:12px; color:#888; margin-top:2px;" id="txt_data_desc">Verified samples analyzed</div>
+            </div>
+
+            <div style="background:#fbfbfd; border-radius:16px; padding:15px; font-size:13px; color:#666; margin-bottom:20px;">
+                <strong id="txt_notice_title" style="color:#333; display:block; margin-bottom:8px;">Notice:</strong>
+                <ul style="margin:0; padding-left:18px;">
+                    <li id="txt_n1">Contains psychological projection scenarios.</li>
+                    <li id="txt_n2">Results have clinical reference value.</li>
+                </ul>
+            </div>
+        </div>
+
+        <button class="btn-primary" onclick="startQuiz()" id="txt_btn_start">Start Assessment</button>
+
+        <div class="legal-footer">
+            <div class="legal-links">
+                <span class="legal-link" onclick="openLegal()">Privacy Policy</span>
+                <span class="legal-link" onclick="openLegal()">Terms of Use</span>
+                <span class="legal-link" onclick="openLegal()">Research Methodology</span>
+            </div>
+            <div style="opacity: 0.6;">
+                &copy; 2024 Spectrum Research Institute (SRI).<br>
+                <span id="txt_grant">Supported by Public Science Grant #GK-2094</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-quiz" class="screen">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <span class="tag-pill" id="progress_text">Q1 / 10</span>
+        </div>
+        <h2 id="question_text" style="font-size:22px; margin-bottom:30px; line-height:1.4;">Loading...</h2>
+        <div id="options_box" style="display:flex; flex-direction:column;"></div>
+    </div>
+
+    <div id="screen-load" class="screen" style="justify-content:center; text-align:center;">
+        <div style="width:40px; height:40px; border:4px solid #eee; border-top-color:#000; border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 20px auto;"></div>
+        <h3 id="txt_processing">Analyzing Data...</h3>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+    </div>
+
+    <div id="screen-result" class="screen">
+        <div style="text-align:center; height:100%; display:flex; flex-direction:column;">
+            <span style="font-size:11px; color:#888; letter-spacing:1px; margin-bottom:10px;">REPORT ID: #9402-GAY</span>
+            <h2 id="txt_report_title">Analysis Report</h2>
+
+            <div class="chart-box">
+                <svg class="circular-chart">
+                    <circle class="circle-bg" cx="100" cy="100" r="90"></circle>
+                    <circle id="circle-path" class="circle-path" cx="100" cy="100" r="90"></circle>
+                </svg>
+                <div style="position:absolute; text-align:center;">
+                    <div class="percentage" id="final_score">0%</div>
+                    <div style="font-size:11px; text-transform:uppercase; color:#888; margin-top:5px;" id="txt_chart_label">Gay Index</div>
+                </div>
+            </div>
+
+            <div style="background:#fbfbfd; border:1px solid #eee; border-radius:20px; padding:20px; text-align:left; margin-bottom:20px;">
+                <strong id="txt_con_title" style="display:block; margin-bottom:10px;">Conclusion: High-Spectrum</strong>
+                <p id="txt_con_desc" style="margin:0; font-size:14px; color:#444;">Your subconscious response patterns show an extremely high correlation with the homosexual spectrum.</p>
+            </div>
+
+            <button class="btn-primary" style="background:#f2f2f7; color:#000; margin-top:auto;" onclick="resetApp()" id="txt_btn_restart">Recalibrate</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 1. 内容数据库 (含免责声明) ---
+    const i18n = {
+        en: {
+            agency: "SRI INSTITUTE v4.2", secure: "SECURE",
+            module: "PSYCHOMETRIC MODULE", title: "Sexual Orientation<br>Spectrum Analysis",
+            intro: "The SRI system analyzes micro-reactions to scientifically determine spectrum position.",
+            data_desc: "Verified samples analyzed", grant: "Supported by Public Science Grant #GK-2094",
+            notice_title: "Notice:", n1: "Contains psychological projection scenarios.", n2: "Results have clinical reference value.",
+            btn_start: "Start Assessment", processing: "Analyzing Neural Patterns...",
+            report_title: "Analysis Report", chart_label: "Homosexual Index",
+            con_title: "Conclusion: High-Spectrum Homosexual",
+            con_desc: "Your subconscious patterns indicate extremely high correlation with the homosexual spectrum (>99% confidence).",
+            btn_restart: "Recalibrate Data",
+            // 法律条款文案
+            legal_title: "Terms of Use & Disclaimer",
+            legal_text: "<p><strong>1. Non-Profit Research Purpose</strong><br>This tool is provided by the Spectrum Research Institute (SRI) as part of the Global Open Science Initiative. Access is free of charge, supported by Public Grant #GK-2094.</p><p><strong>2. Medical Disclaimer</strong><br>The results generated by this algorithm are based on the Kinsey-Klein Scale revisions. While statistically significant, they do not constitute a medical diagnosis. Please consult a licensed professional for clinical advice.</p><p><strong>3. Data Privacy</strong><br>This session operates in 'Anonymous Mode'. No personally identifiable information (PII) is stored on our servers. All computation is performed locally within your browser sandbox.</p><p><strong>4. Limitation of Liability</strong><br>By using this tool, you acknowledge that the analysis is for educational and self-discovery purposes only.</p>"
+        },
+        zh: {
+            agency: "SRI 研究院 v4.2", secure: "安全连接",
+            module: "心理测量模块", title: "性取向光谱评估<br>综合分析系统",
+            intro: "SRI 系统通过分析微表情反应，科学界定您的光谱位置。",
+            data_desc: "已验证的全球样本", grant: "由公共科学基金 #GK-2094 提供支持",
+            notice_title: "须知：", n1: "包含心理投射情境。", n2: "结果具有临床参考价值。",
+            btn_start: "开始专业评估", processing: "正在分析神经元模式...",
+            report_title: "分析报告", chart_label: "同性恋指数",
+            con_title: "临床结论：高纯度同性恋",
+            con_desc: "您的潜意识模式显示，您与同性恋光谱具有极高的相关性（置信度 >99%）。",
+            btn_restart: "重新校准数据",
+            // 法律条款文案
+            legal_title: "使用条款与免责声明",
+            legal_text: "<p><strong>1. 非营利研究目的</strong><br>本工具由光谱研究院 (SRI) 提供，属于全球开放科学计划的一部分。本服务完全免费，由公共基金 #GK-2094 提供资金支持。</p><p><strong>2. 医疗免责声明</strong><br>本算法生成的结果基于修订版《金赛-克莱因量表》。虽然具有统计学意义，但结果不构成正式的医疗诊断。如需临床建议，请咨询执业医师。</p><p><strong>3. 数据隐私</strong><br>本次会话在“匿名模式”下运行。我们的服务器不存储任何个人身份信息 (PII)。所有计算均在您的浏览器沙盒中本地执行。</p><p><strong>4. 责任限制</strong><br>使用本工具即表示您知悉：本分析仅用于教育和自我探索目的。</p>"
+        },
+        jp: {
+            agency: "SRI 研究所 v4.2", secure: "保護された通信",
+            module: "心理測定モジュール", title: "性的指向スペクトル<br>総合分析システム",
+            intro: "SRIシステムは微細な反応を分析し、スペクトル位置を特定します。",
+            data_desc: "検証済みサンプル", grant: "公的研究助成金 #GK-2094 により支援",
+            notice_title: "注意事項：", n1: "心理投影シナリオを含みます。", n2: "結果は臨床的参照価値があります。",
+            btn_start: "診断を開始", processing: "データを分析中...",
+            report_title: "分析レポート", chart_label: "同性愛指数",
+            con_title: "臨床的結論：高スペクトル同性愛",
+            con_desc: "あなたの潜在意識パターンは、同性愛スペクトルと極めて高い相関を示しています。",
+            btn_restart: "データを再調整",
+            legal_title: "利用規約と免責事項",
+            legal_text: "<p><strong>1. 非営利研究目的</strong><br>本ツールはSpectrum Research Institute (SRI)により提供され、利用は無料です。</p><p><strong>2. 免責事項</strong><br>結果は医療診断を構成するものではありません。</p><p><strong>3. プライバシー</strong><br>匿名モードで動作し、個人情報は保存されません。</p>"
+        }
+    };
+
+    // 简化的题目
+    const questions = [
+        {en:{q:"Gym peripheral vision drawn to:",o:["Same-sex physique","Opposite-sex face","Equipment","Space"]},zh:{q:"健身房余光首先被什么吸引？",o:["同性身材","异性面孔","器材","空间"]},jp:{q:"ジムで視線が向くのは？",o:["同性の体格","異性の顔","器具","スペース"]}},
+        {en:{q:"If gender didn't exist, you'd love:",o:["Soulmates (often same-sex)","Opposite sex","Anyone","No one"]},zh:{q:"若无性别标签，你会爱上：",o:["灵魂伴侣(常为同性)","仅限异性","任何人","谁都不爱"]},jp:{q:"性別がなかったら？",o:["魂の伴侶","異性","誰でも","誰も"]}},
+        {en:{q:"Scroll pause time longest on:",o:["Same-sex fitness/style","Dating content","News","Scenery"]},zh:{q:"社交媒体停留时间最长：",o:["同性穿搭/健身","约会内容","新闻","风景"]},jp:{q:"SNSで目が留まるのは？",o:["同性","異性","ニュース","風景"]}},
+        {en:{q:"Most spiritual bond:",o:["Brotherhood/Sisterhood","Marriage","Parenting","Work"]},zh:{q:"最深刻的灵魂纽带：",o:["兄弟/姐妹情谊","婚姻","育儿","工作"]},jp:{q:"精神的な絆は？",o:["同性の絆","結婚","育児","仕事"]}}
+    ];
+
+    let currentLang = 'en';
+    let currentStep = 0;
+    const totalQs = 10;
+
+    function toggleLang() { document.getElementById('lang_menu').classList.toggle('show'); }
+    function setLang(lang) {
+        currentLang = lang;
+        document.getElementById('lang_menu').classList.remove('show');
+        const flags = {en:'English',zh:'中文',jp:'日本語'};
+        document.getElementById('cur_lang').innerText = flags[lang];
+        refreshText();
+    }
+
+    function refreshText() {
+        const t = i18n[currentLang];
+        const map = {
+            'txt_agency': t.agency, 'txt_secure': t.secure, 'txt_module': t.module, 'txt_title': t.title,
+            'txt_intro': t.intro, 'txt_data_desc': t.data_desc, 'txt_grant': t.grant,
+            'txt_notice_title': t.notice_title, 'txt_n1': t.n1, 'txt_n2': t.n2,
+            'txt_btn_start': t.btn_start, 'txt_processing': t.processing,
+            'txt_report_title': t.report_title, 'txt_chart_label': t.chart_label,
+            'txt_con_title': t.con_title, 'txt_con_desc': t.con_desc, 'txt_btn_restart': t.btn_restart,
+            'legal_title': t.legal_title, 'legal_text': t.legal_text // 注入法律文本
+        };
+        for(let id in map) {
+            const el = document.getElementById(id);
+            if(el) el.innerHTML = map[id]; // 使用innerHTML支持标签
+        }
+        if(document.getElementById('screen-quiz').classList.contains('active')) loadQuestion(currentStep);
+    }
+
+    // --- 法律模态框控制 ---
+    function openLegal() {
+        const modal = document.getElementById('legal_modal');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+    function closeLegal() {
+        const modal = document.getElementById('legal_modal');
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+
+    // 屏幕切换
+    function switchScreen(id) {
+        document.querySelectorAll('.screen').forEach(el => { el.classList.remove('active'); el.style.display='none'; });
+        const t = document.getElementById(id);
+        t.style.display='flex'; setTimeout(()=>t.classList.add('active'),10);
+    }
+
+    function startQuiz() { currentStep=0; switchScreen('screen-quiz'); loadQuestion(0); }
+
+    function loadQuestion(i) {
+        const q = questions[i%questions.length][currentLang];
+        document.getElementById('progress_text').innerText = `Q${i+1} / 10`;
+        document.getElementById('question_text').innerText = q.q;
+        const box = document.getElementById('options_box'); box.innerHTML='';
+        q.o.forEach((opt,idx)=>{
+            const d = document.createElement('div'); d.className='option-card'; d.innerText=opt;
+            d.style.animationDelay=`${idx*0.1}s`; d.onclick=nextStep; box.appendChild(d);
+        });
+    }
+
+    function nextStep() {
+        if(currentStep<9) { // 模拟10题
+            currentStep++;
+            const s = document.getElementById('screen-quiz'); s.style.opacity=0;
+            setTimeout(()=>{ loadQuestion(currentStep); s.style.opacity=1; },250);
+        } else {
+            switchScreen('screen-load'); setTimeout(showResult, 2500);
+        }
+    }
+
+    function showResult() {
+        switchScreen('screen-result');
+        const score = Math.floor(Math.random()*(99-75+1))+75;
+        const offset = 565 - (565*(score/100));
+        const c = document.getElementById('circle-path'); c.style.strokeDashoffset = 565;
+        setTimeout(()=>c.style.strokeDashoffset=offset,100);
+        let curr=0; const num=document.getElementById('final_score');
+        const t = setInterval(()=>{ if(curr<score){curr++;num.innerText=curr+'%';}else clearInterval(t); },20);
+    }
+
+    function resetApp() { switchScreen('screen-home'); document.getElementById('final_score').innerText='0%'; document.getElementById('circle-path').style.strokeDashoffset=565; }
+
+    refreshText();
+</script>
 </body>
 </html>
